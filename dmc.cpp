@@ -52,7 +52,7 @@ private:
   map<uchar, State*> next_state;
   map<uchar, uint> trans_count;
 };
-// Dynamic Markov compression‚Ìƒx[ƒXƒNƒ‰ƒX
+// Dynamic Markov compressionã®ãƒ™ãƒ¼ã‚¹ã‚¯ãƒ©ã‚¹
 class DmcBase {
 public:
   DmcBase (int model) {
@@ -75,7 +75,7 @@ public:
     return last_state_+1;
   }
 protected:
-  // •ª—£“_(mp)‚ğŒvZ‚·‚éB
+  // åˆ†é›¢ç‚¹(mp)ã‚’è¨ˆç®—ã™ã‚‹ã€‚
   ulong CalculateMP () {
     double p0, p1;
     ulong mp;
@@ -86,15 +86,15 @@ protected:
     if (mp <= lower_bound_) {
       mp = lower_bound_ + 1;
     }
-    // mp‚ÌÅ‰Ebit‚ğ1‚É•ÏX
+    // mpã®æœ€å³bitã‚’1ã«å¤‰æ›´
     mp = mp | 1;
-    // Å‰Ebit‚ğ1‚É•ÏX‚µ‚½Œ‹‰ÊAupper_bound_‚ğ’´‚¦‚é‰Â”\«‚ª‚ ‚éB‚»‚Ìê‡Amp=upper_bound_‚Æ‚·‚éB
+    // æœ€å³bitã‚’1ã«å¤‰æ›´ã—ãŸçµæœã€upper_bound_ã‚’è¶…ãˆã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹ã€‚ãã®å ´åˆã€mp=upper_bound_ã¨ã™ã‚‹ã€‚
     if (mp > upper_bound_) {
       mp = upper_bound_;
     }
     return mp;
   }
-  // o—Íƒoƒbƒtƒ@‚Éˆø”‚Æ‚µ‚Äw’è‚³‚ê‚½bit‚ğŠi”[‚·‚éB
+  // å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡ã«å¼•æ•°ã¨ã—ã¦æŒ‡å®šã•ã‚ŒãŸbitã‚’æ ¼ç´ã™ã‚‹ã€‚
   void AddBuffer (uchar outbit) {
     temp_ = temp_ + (outbit << bit_count_);
     if (++bit_count_ == 8) {
@@ -107,7 +107,7 @@ protected:
       buffer_count_ = 0;
     }
   }
-  // ƒNƒ[ƒjƒ“ƒO‚ğs‚¤B
+  // ã‚¯ãƒ­ãƒ¼ãƒ‹ãƒ³ã‚°ã‚’è¡Œã†ã€‚
   void DoCloning (uchar bit) {
     uint trans_count = current_state_->GetTransCount(bit);
     State *next_state = current_state_->GetNextState(bit);
@@ -117,7 +117,7 @@ protected:
       State *new_state = new State(last_state_++);
       current_state_->SetNextState(bit, new_state);
       double ratio = (double) (trans_count + 1) / (next_count + 2);
-      // ratio‚Ì³‹K‰»(Cloning‚ÍCloningŒã‚ÌŸó‘Ô‚Ìtrans_count <= Œ»ó‘Ô‚Ìtrans_count‚ğ•ÛØ‚µ‚Ä‚¢‚È‚¢‚Ì‚ÅAratio‚ª1‚ğ’´‚¦‚éê‡‚ª‚ ‚éB
+      // ratioã®æ­£è¦åŒ–(Cloningã¯Cloningå¾Œã®æ¬¡çŠ¶æ…‹ã®trans_count <= ç¾çŠ¶æ…‹ã®trans_countã‚’ä¿è¨¼ã—ã¦ã„ãªã„ã®ã§ã€ratioãŒ1ã‚’è¶…ãˆã‚‹å ´åˆãŒã‚ã‚‹ã€‚
       if (ratio > 1) {
         ratio = 1;
       }
@@ -131,7 +131,7 @@ protected:
       cloning_count_++;
     }
   }
-  // ƒƒ“ƒo•Ï”Eƒ}ƒ‹ƒRƒt˜A½‚Ì‰Šú‰»‚ğs‚¤B
+  // ãƒ¡ãƒ³ãƒå¤‰æ•°ãƒ»ãƒãƒ«ã‚³ãƒ•é€£é–ã®åˆæœŸåŒ–ã‚’è¡Œã†ã€‚
   void Init (int model) {
     last_state_ = 0;
     if (model == MODEL_BYTE) {
@@ -148,7 +148,7 @@ protected:
     cloning_threshold1_ = 16;
     cloning_threshold2_ = 16;
   }
-  // ƒ}ƒ‹ƒRƒt˜A½‚ğBraid\‘¢‚Å‰Šú‰»‚·‚éB
+  // ãƒãƒ«ã‚³ãƒ•é€£é–ã‚’Braidæ§‹é€ ã§åˆæœŸåŒ–ã™ã‚‹ã€‚
   void InitStatesWithBraid () {
     for (uint i=0; i<kNBITS; i++) {
       for (uint j=0; j<kSTRANDS; j++) {
@@ -168,7 +168,7 @@ protected:
     }
     current_state_ = state_map_[0];
   }
-  // ƒ}ƒ‹ƒRƒt˜A½‚ğByte\‘¢‚Å‰Šú‰»‚·‚éB
+  // ãƒãƒ«ã‚³ãƒ•é€£é–ã‚’Byteæ§‹é€ ã§åˆæœŸåŒ–ã™ã‚‹ã€‚
   void InitStatesWithByteModel () {
     State *state = new State(last_state_++);
     state->SetTransCount(0,0);
@@ -177,7 +177,7 @@ protected:
     InitStatesWithByteModel(state, 0);
     current_state_ = state;
   }
-  // ƒ}ƒ‹ƒRƒt˜A½‚ğByte\‘¢‚Å‰Šú‰»‚·‚éBiÄ‹AŒÄ‚Ño‚µ—pŠÖ”j
+  // ãƒãƒ«ã‚³ãƒ•é€£é–ã‚’Byteæ§‹é€ ã§åˆæœŸåŒ–ã™ã‚‹ã€‚ï¼ˆå†å¸°å‘¼ã³å‡ºã—ç”¨é–¢æ•°ï¼‰
   void InitStatesWithByteModel (State *parent, int depth) {
     if (depth < 7) {
       for (int i=0; i<2; i++) {
@@ -215,7 +215,7 @@ protected:
   uint cloning_threshold2_;
 
 };
-// Dynamic Markov compression‚ÌƒGƒ“ƒR[ƒ_ƒNƒ‰ƒX
+// Dynamic Markov compressionã®ã‚¨ãƒ³ã‚³ãƒ¼ãƒ€ã‚¯ãƒ©ã‚¹
 class DmcEncoder : public DmcBase {
 public:
   DmcEncoder (int model) : DmcBase (model) {
@@ -231,8 +231,8 @@ public:
       upper_bound_ = mp - 1;
     }
     
-    // ãŒÀ‚Æ‰ºŒÀ‚ğ”äŠr‚µ‚ÄŠm’è‚µ‚Ä‚¢‚ébit‚ª‚ ‚ê‚Îencoded bit‚Æ‚µ‚Äƒoƒbƒtƒ@‚ÉŠi”[‚·‚éB
-    // Šm’è‚µ‚Ä‚¢‚ébit•ª‚¾‚¯AãŒÀE‰ºŒÀ‚ğƒVƒtƒg‚·‚éB
+    // ä¸Šé™ã¨ä¸‹é™ã‚’æ¯”è¼ƒã—ã¦ç¢ºå®šã—ã¦ã„ã‚‹bitãŒã‚ã‚Œã°encoded bitã¨ã—ã¦ãƒãƒƒãƒ•ã‚¡ã«æ ¼ç´ã™ã‚‹ã€‚
+    // ç¢ºå®šã—ã¦ã„ã‚‹bitåˆ†ã ã‘ã€ä¸Šé™ãƒ»ä¸‹é™ã‚’ã‚·ãƒ•ãƒˆã™ã‚‹ã€‚
     while ((lower_bound_ & kMSBIT) == (upper_bound_ & kMSBIT)) {
       unsigned char outbit = lower_bound_ >> (kN-1);
       AddBuffer(outbit);
@@ -240,30 +240,30 @@ public:
       upper_bound_ = ((upper_bound_ << 1) & kMSMASK) | 1;
     }
     
-    // ƒNƒ[ƒjƒ“ƒO‚ğs‚¤B
+    // ã‚¯ãƒ­ãƒ¼ãƒ‹ãƒ³ã‚°ã‚’è¡Œã†ã€‚
     DoCloning(bit);
 
-    // ƒ}ƒ‹ƒRƒt˜A½‚ğXV‚·‚éB
+    // ãƒãƒ«ã‚³ãƒ•é€£é–ã‚’æ›´æ–°ã™ã‚‹ã€‚
     current_state_->SetTransCount(bit, current_state_->GetTransCount(bit)+1);
     current_state_ = current_state_->GetNextState(bit);
   }
-  // encoded‚³‚ê‚½ÅIbit‚ªAƒoƒCƒg‚Æ‚µ‚Äo—Í‚³‚ê‚é‚æ‚¤‚Éƒ_ƒ~[‚Ì7bit‚ğencode‚·‚éB
-  // ‚Ü‚½Aencode‘ÎÛ‚ÌÅIbit‚ª³í‚Éencode‚³‚ê‚é‚æ‚¤‚ÉAmp‚Ì––”ö1bit‚ğœ‚¢‚½‘S‚Ä‚Ìbit—ñ‚ğencoded bit‚Æ‚µ‚Äo—Í‚·‚éB
+  // encodedã•ã‚ŒãŸæœ€çµ‚bitãŒã€ãƒã‚¤ãƒˆã¨ã—ã¦å‡ºåŠ›ã•ã‚Œã‚‹ã‚ˆã†ã«ãƒ€ãƒŸãƒ¼ã®7bitã‚’encodeã™ã‚‹ã€‚
+  // ã¾ãŸã€encodeå¯¾è±¡ã®æœ€çµ‚bitãŒæ­£å¸¸ã«encodeã•ã‚Œã‚‹ã‚ˆã†ã«ã€mpã®æœ«å°¾1bitã‚’é™¤ã„ãŸå…¨ã¦ã®bitåˆ—ã‚’encoded bitã¨ã—ã¦å‡ºåŠ›ã™ã‚‹ã€‚
   void EncodeFinish () {
     ulong mp;
     for (int i=0; i<7; i++) {
       mp = CalculateMP();
-      // ƒ_ƒ~[‚Ìbit‚Æ‚µ‚ÄAencoded bit‚ªÅ’á1bitŠm’è‚³‚ê‚ébit‚ğ‘I‘ğ‚µAencode‚·‚éB
+      // ãƒ€ãƒŸãƒ¼ã®bitã¨ã—ã¦ã€encoded bitãŒæœ€ä½1bitç¢ºå®šã•ã‚Œã‚‹bitã‚’é¸æŠã—ã€encodeã™ã‚‹ã€‚
       if ((lower_bound_ & kMSBIT) == (mp & kMSBIT)) {
-        // lower_bound_‚ÌÅãˆÊbit‚Æmp‚ÌÅãˆÊbit‚ªˆê’v‚·‚éê‡‚ÍAƒ_ƒ~[‚Ìbit‚Æ‚µ‚Ä0‚ğencode‚·‚éB
+        // lower_bound_ã®æœ€ä¸Šä½bitã¨mpã®æœ€ä¸Šä½bitãŒä¸€è‡´ã™ã‚‹å ´åˆã¯ã€ãƒ€ãƒŸãƒ¼ã®bitã¨ã—ã¦0ã‚’encodeã™ã‚‹ã€‚
         Encode(0, mp);
       } else {
-        // upper_bound_‚ÌÅãˆÊbit‚Æmp‚ÌÅãˆÊbit‚ªˆê’v‚·‚éê‡‚ÍAƒ_ƒ~[‚Ìbit‚Æ‚µ‚Ä1‚ğencode‚·‚éB
+        // upper_bound_ã®æœ€ä¸Šä½bitã¨mpã®æœ€ä¸Šä½bitãŒä¸€è‡´ã™ã‚‹å ´åˆã¯ã€ãƒ€ãƒŸãƒ¼ã®bitã¨ã—ã¦1ã‚’encodeã™ã‚‹ã€‚
         Encode(1, mp);
       }
     }
     mp = CalculateMP();
-    // mp‚ÌÅŒã‚Ì1bit‚ğœ‚«Ao—Í‚·‚éB
+    // mpã®æœ€å¾Œã®1bitã‚’é™¤ãã€å‡ºåŠ›ã™ã‚‹ã€‚
     while (mp != kMSBIT) {
       uchar outbit = (mp >> (kN-1));
       AddBuffer(outbit);
@@ -271,7 +271,7 @@ public:
     }
   }
 };
-// Dynamic Markov compression‚ÌƒfƒR[ƒ_ƒNƒ‰ƒX
+// Dynamic Markov compressionã®ãƒ‡ã‚³ãƒ¼ãƒ€ã‚¯ãƒ©ã‚¹
 class DmcDecoder : public DmcBase {
 public:
   DmcDecoder (int model) : DmcBase (model) {
@@ -281,12 +281,12 @@ public:
 
     decode_buffer_queue.push_back(bit);
 
-    // decode‚³‚ê‚½bit
+    // decodeã•ã‚ŒãŸbit
     char outbit;
     
-    // decode‚³‚ê‚½bit‚ªŠm’è‚µ‚Ä‚¢‚éŠÔƒ‹[ƒv‚µ‘±‚¯‚é
+    // decodeã•ã‚ŒãŸbitãŒç¢ºå®šã—ã¦ã„ã‚‹é–“ãƒ«ãƒ¼ãƒ—ã—ç¶šã‘ã‚‹
     do {
-      // Œ»İ“Ç‚İ‚Ü‚ê‚½–¢Šm’è‚Ìencoded bit—ñ‚©‚çn‚Ü‚éN bit—ñ‚ÌÅ¬’lEÅ‘å’l‚ğ‚»‚ê‚¼‚ê‹‚ß‚éB
+      // ç¾åœ¨èª­ã¿è¾¼ã¾ã‚ŒãŸæœªç¢ºå®šã®encoded bitåˆ—ã‹ã‚‰å§‹ã¾ã‚‹N bitåˆ—ã®æœ€å°å€¤ãƒ»æœ€å¤§å€¤ã‚’ãã‚Œãã‚Œæ±‚ã‚ã‚‹ã€‚
       ulong min = 0;
       ulong max = 0;      
       uint count = decode_buffer_queue.size();
@@ -296,35 +296,35 @@ public:
       min = min << (kN - (count));
       max = min | ((1 << (kN-count)) - 1);
 
-      // •ª—£“_mp‚ÆaEb‚Æ‚ğ”äŠr‚·‚éB
+      // åˆ†é›¢ç‚¹mpã¨aãƒ»bã¨ã‚’æ¯”è¼ƒã™ã‚‹ã€‚
       mp = CalculateMP();
       if (min >= mp) {
-        // Å¬’l‚ªmpˆÈã‚Ìê‡AmpˆÈã‚É‚È‚é‚±‚Æ‚ªŠm’è‚·‚é‚Ì‚Ådecode‚³‚ê‚½bit‚Í1‚É‚È‚é
+        // æœ€å°å€¤ãŒmpä»¥ä¸Šã®å ´åˆã€mpä»¥ä¸Šã«ãªã‚‹ã“ã¨ãŒç¢ºå®šã™ã‚‹ã®ã§decodeã•ã‚ŒãŸbitã¯1ã«ãªã‚‹
         outbit = 1;
         lower_bound_ = mp;
       } else if (max < mp) {
-        // Å‘å’l‚ªmp–¢–‚Ìê‡Amp–¢–‚É‚È‚é‚±‚Æ‚ªŠm’è‚·‚é‚Ì‚Ådecode‚³‚ê‚½bit‚Í0‚É‚È‚é
+        // æœ€å¤§å€¤ãŒmpæœªæº€ã®å ´åˆã€mpæœªæº€ã«ãªã‚‹ã“ã¨ãŒç¢ºå®šã™ã‚‹ã®ã§decodeã•ã‚ŒãŸbitã¯0ã«ãªã‚‹
         outbit = 0;
         upper_bound_ = mp - 1;
       } else {
-        // mpˆÈã‚©mp–¢–‚©‚ÍAŸ‚Ìencoded bit‚ğ“Ç‚İ‚Ü‚È‚¢‚Æ•ª‚©‚ç‚È‚¢B
-        // decode‚³‚ê‚½bit‚Í•s–¾
+        // mpä»¥ä¸Šã‹mpæœªæº€ã‹ã¯ã€æ¬¡ã®encoded bitã‚’èª­ã¿è¾¼ã¾ãªã„ã¨åˆ†ã‹ã‚‰ãªã„ã€‚
+        // decodeã•ã‚ŒãŸbitã¯ä¸æ˜
         outbit = -1;
       }
 
       if (outbit >= 0) {
 
-        // ãŒÀ‚Æ‰ºŒÀ‚ğ”äŠr‚µ‚ÄŠm’è‚µ‚Ä‚¢‚ébit•ª‚¾‚¯AãŒÀE‰ºŒÀ‚Æ–¢Šm’èencoded bit—ñ‚ğƒVƒtƒg‚·‚éB
+        // ä¸Šé™ã¨ä¸‹é™ã‚’æ¯”è¼ƒã—ã¦ç¢ºå®šã—ã¦ã„ã‚‹bitåˆ†ã ã‘ã€ä¸Šé™ãƒ»ä¸‹é™ã¨æœªç¢ºå®šencoded bitåˆ—ã‚’ã‚·ãƒ•ãƒˆã™ã‚‹ã€‚
         while ((lower_bound_ & kMSBIT) == (upper_bound_ & kMSBIT)) {
           decode_buffer_queue.pop_front();
           lower_bound_ = (lower_bound_ << 1) & kMSMASK;
           upper_bound_ = ((upper_bound_ << 1) & kMSMASK) | 1;
         }
 
-        // ƒNƒ[ƒjƒ“ƒO‚ğs‚¤B
+        // ã‚¯ãƒ­ãƒ¼ãƒ‹ãƒ³ã‚°ã‚’è¡Œã†ã€‚
         DoCloning(outbit);
 
-        // ƒ}ƒ‹ƒRƒt˜A½‚ğXV‚·‚éB
+        // ãƒãƒ«ã‚³ãƒ•é€£é–ã‚’æ›´æ–°ã™ã‚‹ã€‚
         current_state_->SetTransCount(outbit, current_state_->GetTransCount(outbit)+1);
         current_state_ = current_state_->GetNextState(outbit);
 
@@ -342,7 +342,7 @@ void usage() {
           "rc e inputfile.dmc (decode inputfile.dmc and make inputfile.dmc.test)\n");
 }
 
-// ƒƒCƒ“ŠÖ”
+// ãƒ¡ã‚¤ãƒ³é–¢æ•°
 int main (int argc, char* argv[]) {  
   int result;
   int decode = 0;

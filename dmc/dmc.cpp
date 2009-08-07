@@ -337,9 +337,14 @@ private:
 };
 
 void usage() {
-  fprintf(stderr, "dmc (e/d) inputfile\n"
-          "rc e inputfile     (encode inputfile and output inputfile.dmc)\n"
-          "rc e inputfile.dmc (decode inputfile.dmc and make inputfile.dmc.test)\n");
+  fprintf(stderr, "Usage: dmc [OPTION] (-e/-d) inputfile\n"
+          "    dmc [OPTION] -e inputfile (encode inputfile and output inputfile.dmc)\n"
+          "    dmc [OPTION] -d inputfile (decode inputfile and make inputfile.raw)\n"
+          "\n"
+          "Options: \n"
+          "    -m=MODEL_NAME specify the model by which the markov chain is initialized\n"
+          "    -A=NUMBER specify cloning threshold 1\n"
+          "    -B=NUMBER specify cloning threshold 2\n");
 }
 
 // メイン関数
@@ -391,6 +396,10 @@ int main (int argc, char* argv[]) {
     }
   }
 
+  if (argv[optind] == NULL) {
+    usage();
+    return -1;
+  }
   string infile(argv[optind]);
   FILE* outfp;
   if (decode) {
